@@ -14,9 +14,3 @@ Vigor é uma aplicação web que permite o upload e a visualização de arquivos
 - **CSS**: Para estilização da aplicação.
 - **JavaScript**: Para a lógica de carregamento e manipulação dos dados.
 
-## Como Usar
-
-1. **Clone o repositório**:
-   ```bash
-   git clone https://github.com/usuario/vigor.git
-   cd vigor
