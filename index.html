@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload de JSON</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Sofia&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="titulo">
+            <h1>Vigor</h1>
+        </div>
+    </header>
+    <div class="container">
+        <input type="file" id="jsonFile" accept=".json" class="file-upload" />
+        <label for="jsonFile" class="custom-file-upload">Escolher arquivo</label>
+        <button id="uploadButton">Carregar JSON</button>
+        <table id="dataTable">
+            <thead>
+                <tr></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

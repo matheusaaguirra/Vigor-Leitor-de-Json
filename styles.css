@@ -1,0 +1,135 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000135;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+header {
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    position: fixed;
+    top: 0;
+}
+
+h1 {
+    color: #98BADD;
+    font-family: "Sofia", cursive;
+    font-weight: 900;
+    font-size: 60px;
+}
+
+.container {
+    margin-top: 150px;
+    text-align: center;
+    width: auto;
+    /* Altere para auto para permitir o ajuste automático */
+}
+
+input[type="file"],
+button {
+    padding: 10px 20px;
+    margin: 20px;
+    font-size: 16px;
+}
+
+table {
+    margin: 30px auto;
+    /* Centraliza a tabela horizontalmente */
+    width: auto;
+    max-width: 900px;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: left;
+    color: #000000;
+}
+
+th {
+    background-color: #0051BA;
+}
+
+.file-upload {
+    display: none;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 15px;
+    background-color: #2B4B7F;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#uploadButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 15px;
+    background-color: #2B4B7F;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#uploadButton:hover {
+    background-color: #3472c9;
+}
+
+.custom-file-upload:hover {
+    background-color: #3472c9;
+}
+
+.delete-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 15px;
+    background-color: #e74c3c;
+    /* Cor de fundo vermelha */
+    color: white;
+    /* Cor do texto */
+    font-size: 16px;
+    cursor: pointer;
+    /* Muda o cursor para indicar que é clicável */
+    transition: background-color 0.3s;
+    /* Suaviza a transição de cor */
+    margin-top: 20px;
+    /* Adiciona espaço acima do botão de excluir */
+}
+
+.delete-button:hover {
+    background-color: #c0392b;
+    /* Cor ao passar o mouse */
+}
+
+.delete-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 15px;
+    background-color: #e74c3c;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+}
