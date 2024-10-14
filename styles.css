@@ -13,8 +13,6 @@ body {
     align-items: center;
 }
 
-
-
 header {
     width: 100%;
     text-align: center;
@@ -63,6 +61,14 @@ td {
 
 th {
     background-color: #0051BA;
+    position: relative; /* Para permitir o posicionamento dos checkboxes */
+}
+
+th input[type="checkbox"] {
+    position: absolute;
+    right: 10px; /* Posiciona o checkbox à direita dentro do cabeçalho */
+    top: 50%;
+    transform: translateY(-50%); /* Centraliza verticalmente o checkbox */
 }
 
 .file-upload {
@@ -121,14 +127,48 @@ th {
     /* Cor ao passar o mouse */
 }
 
-.delete-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 15px;
-    background-color: #e74c3c;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+#dataTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
 
+#dataTable th, #dataTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.modal {
+    display: none; /* Escondido por padrão */
+    position: fixed; /* Fica no lugar */
+    z-index: 1; /* Fica acima de outros conteúdos */
+    left: 0;
+    top: 0;
+    width: 100%; /* Largura total */
+    height: 100%; /* Altura total */
+    overflow: auto; /* Se necessário, rolagem */
+    background-color: rgb(0,0,0); /* Cor de fundo */
+    background-color: rgba(0,0,0,0.4); /* Com opacidade */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% de margem superior e centralizado */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Largura do modal */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }

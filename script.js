@@ -1,99 +1,180 @@
-document.getElementById('uploadButton').addEventListener('click', function () {
-    const fileInput = document.getElementById('jsonFile');
-    const file = fileInput.files[0];
+document.addEventListener('DOMContentLoaded', () => {
+    const filterCheckboxes = document.querySelectorAll('.filter-checkbox');
+    filterCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const columnClass = this.getAttribute('data-column');
+            const cells = document.querySelectorAll(`td.${columnClass}`);
+            cells.forEach(cell => {
+                cell.style.visibility = this.checked ? 'visible' : 'hidden';
+            });
+        });
+    });
 
-    if (file) {
-        const reader = new FileReader();
+    document.getElementById('uploadButton').addEventListener('click', function () {
+        const fileInput = document.getElementById('jsonFile');
+        const file = fileInput.files[0];
 
-        reader.onload = function (e) {
-            const jsonContent = e.target.result;
+        if (file) {
+            const reader = new FileReader();
 
-            try {
-                const data = JSON.parse(jsonContent);
+            reader.onload = function (e) {
+                const jsonContent = e.target.result;
 
-                if (Array.isArray(data)) {
-                    if (data.length > 0 && typeof data[0] === 'object') {
-                        generateTable(data);
-                        saveToLocalStorage(data);
+                try {
+                    const data = JSON.parse(jsonContent);
+
+                    if (Array.isArray(data)) {
+                        if (data.length > 0 && typeof data[0] === 'object') {
+                            appendDataToTable(data);
+                        } else {
+                            alert("O arquivo JSON é um array, mas não contém objetos válidos.");
+                        }
+                    } else if (typeof data === 'object') {
+                        appendDataToTable([data]);
                     } else {
-                        alert("O arquivo JSON é um array, mas não contém objetos válidos.");
+                        alert("O formato do arquivo JSON não é suportado.");
                     }
-                } else if (typeof data === 'object') {
-                    generateTable([data]);
-                    saveToLocalStorage([data]);
-                } else {
-                    alert("O formato do arquivo JSON não é suportado.");
+                } catch (error) {
+                    alert("Erro ao ler o arquivo JSON. Verifique o formato.");
                 }
-            } catch (error) {
-                alert("Erro ao ler o arquivo JSON. Verifique o formato.");
-            }
-        };
+            };
 
-        reader.onerror = function () {
-            alert("Erro ao carregar o arquivo. Tente novamente.");
-        };
+            reader.onerror = function () {
+                alert("Erro ao carregar o arquivo. Tente novamente.");
+            };
 
-        reader.readAsText(file);
-    } else {
-        alert("Por favor, selecione um arquivo JSON.");
-    }
+            reader.readAsText(file);
+        } else {
+            alert("Por favor, selecione um arquivo JSON.");
+        }
+    });
 });
 
-function generateTable(data) {
-    const container = document.querySelector('.container');
+// Função para adicionar novos dados na tabela
+function appendDataToTable(data) {
+    const tbody = document.querySelector('#dataTable tbody');
 
-    // Criação de um elemento de tabela
-    const table = document.createElement('table');
-    const thead = document.createElement('thead');
-    const tbody = document.createElement('tbody');
-
-    // Criando o cabeçalho
-    const headers = Object.keys(data[0]);
-    const headerRow = document.createElement('tr');
-    headers.forEach(header => {
-        const th = document.createElement('th');
-        th.textContent = header;
-        headerRow.appendChild(th);
-    });
-    thead.appendChild(headerRow);
-
-    // Criando o corpo da tabela
-    data.forEach(item => {
+    data.forEach((item, index) => {
         const row = document.createElement('tr');
-        headers.forEach(header => {
+
+        // Coluna de ações
+        const actionCell = document.createElement('td');
+        actionCell.innerHTML = `<button onclick="openModal(${index})">Editar / Excluir</button>`;
+        row.appendChild(actionCell);
+
+        // Adiciona as células para cada propriedade
+        const allowedColumns = ['Description', 'DNSHostName', 'IPv4Address', 'LastLogonDate'];
+        allowedColumns.forEach(header => {
             const td = document.createElement('td');
-            td.textContent = item[header] !== undefined ? item[header] : 'N/A';
+            let value = item[header];
+
+            if (header === 'LastLogonDate' && value) {
+                value = formatDateTime(value);
+            }
+
+            td.textContent = value !== undefined ? value : 'N/A';
+            td.classList.add(header);
             row.appendChild(td);
         });
+
         tbody.appendChild(row);
     });
 
-    // Montando a tabela
-    table.appendChild(thead);
-    table.appendChild(tbody);
-    container.appendChild(table);
-
-    // Adicionando botão de excluir para esta tabela
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Excluir Tabela';
-    deleteButton.classList.add('delete-button');
-    deleteButton.onclick = function () {
-        container.removeChild(table); // Remove apenas esta tabela
-        container.removeChild(deleteButton); // Remove o botão associado
-    };
-
-    // Adicionando o botão abaixo da tabela
-    container.appendChild(deleteButton);
+    saveToLocalStorage(); // Salva após adicionar novos dados
 }
 
+
+// Função para abrir o modal// Função para abrir o modal
+function openModal(item, index) {
+    document.getElementById('description').value = item.Description || '';
+    document.getElementById('dnsHostName').value = item.DNSHostName || '';
+    document.getElementById('ipv4Address').value = item.IPv4Address || '';
+    document.getElementById('lastLogonDate').value = item.LastLogonDate || '';
+
+    const modal = document.getElementById('modal');
+    modal.style.display = 'block';
+
+    // Ao clicar em salvar, edita os dados
+    document.getElementById('saveButton').onclick = () => {
+        editData(index);
+        closeModal(); // Fecha o modal após salvar
+    };
+
+    // Ao clicar em excluir, deleta os dados
+    document.getElementById('deleteButton').onclick = () => {
+        deleteData(index);
+        closeModal(); // Fecha o modal após excluir
+    };
+
+    document.querySelector('.close').onclick = closeModal; // Função para fechar o modal ao clicar na cruz
+}
+
+// Função para editar dados
+function editData(index) {
+    const data = JSON.parse(localStorage.getItem('uploadedData')) || [];
+    
+    if (data.length > index) {
+        // Atualiza os dados com os valores do modal
+        data[index].Description = document.getElementById('description').value;
+        data[index].DNSHostName = document.getElementById('dnsHostName').value;
+        data[index].IPv4Address = document.getElementById('ipv4Address').value;
+        data[index].LastLogonDate = document.getElementById('lastLogonDate').value;
+
+        saveToLocalStorage(data);
+        updateTable(); // Atualiza a tabela sem limpar
+    }
+}
+
+// Função para excluir dados
+function deleteData(index) {
+    const data = JSON.parse(localStorage.getItem('uploadedData')) || [];
+    data.splice(index, 1); // Remove o item do array
+    saveToLocalStorage(data);
+    updateTable(); // Atualiza a tabela sem limpar
+}
+
+// Função para atualizar a tabela
+function updateTable() {
+    const data = JSON.parse(localStorage.getItem('uploadedData')) || [];
+    appendDataToTable(data); // Preenche a tabela com os dados atualizados
+}
+
+// Função para fechar o modal
+function closeModal() {
+    const modal = document.getElementById('modal');
+    modal.style.display = 'none';
+}
+
+
+// Função para formatar a data
+function formatDateTime(dateString) {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+        return 'Data inválida';
+    }
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    return date.toLocaleDateString('pt-BR', options);
+}
+
+// Função para formatar a data
+function formatDateTime(dateString) {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+        return 'Data inválida';
+    }
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    return date.toLocaleDateString('pt-BR', options);
+}
+
+// Função para salvar dados no LocalStorage
 function saveToLocalStorage(data) {
     const jsonString = JSON.stringify(data);
     localStorage.setItem('uploadedData', jsonString);
 }
 
+// Função para carregar dados do LocalStorage
 function loadFromLocalStorage() {
     const storedData = localStorage.getItem('uploadedData');
-
     if (storedData) {
         try {
             const data = JSON.parse(storedData);
@@ -104,7 +185,7 @@ function loadFromLocalStorage() {
     }
 }
 
-// Carrega os dados do Local Storage ao carregar a página
+// Carrega os dados do LocalStorage ao carregar a página
 window.onload = function () {
     loadFromLocalStorage();
 };

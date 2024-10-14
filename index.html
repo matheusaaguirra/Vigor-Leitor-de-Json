@@ -15,16 +15,58 @@
             <h1>Vigor</h1>
         </div>
     </header>
+
     <div class="container">
-        <input type="file" id="jsonFile" accept=".json" class="file-upload" />
+        <!-- Input para upload do arquivo JSON -->
+        <input type="file" id="jsonFile" accept=".json" multiple class="file-upload" />
         <label for="jsonFile" class="custom-file-upload">Escolher arquivo</label>
         <button id="uploadButton">Carregar JSON</button>
+
+        <!-- Tabela com cabeçalhos fixos -->
         <table id="dataTable">
             <thead>
-                <tr></tr>
+                <tr>
+                    <th>Ações</th>
+                    <th class="Description">
+                        Description
+                        <input type="checkbox" class="filter-checkbox" data-column="Description" checked>
+                    </th>
+                    <th class="DNSHostName">
+                        DNSHostName
+                        <input type="checkbox" class="filter-checkbox" data-column="DNSHostName" checked>
+                    </th>
+                    <th class="IPv4Address">
+                        IPv4Address
+                        <input type="checkbox" class="filter-checkbox" data-column="IPv4Address" checked>
+                    </th>
+                    <th class="LastLogonDate">
+                        LastLogonDate
+                        <input type="checkbox" class="filter-checkbox" data-column="LastLogonDate" checked>
+                    </th>
+                </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                <!-- As linhas da tabela serão inseridas pelo JavaScript -->
+            </tbody>
         </table>
+    </div>
+
+    <!-- Modal para editar/excluir dados -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Item</h2>
+            <label for="description">Description:</label>
+            <input type="text" id="description">
+            <label for="dnsHostName">DNSHostName:</label>
+            <input type="text" id="dnsHostName">
+            <label for="ipv4Address">IPv4Address:</label>
+            <input type="text" id="ipv4Address">
+            <label for="lastLogonDate">LastLogonDate:</label>
+            <input type="text" id="lastLogonDate">
+            <button id="saveButton">Salvar</button>
+            <button id="deleteButton">Excluir</button>
+        </div>
     </div>
 
     <script src="script.js"></script>
